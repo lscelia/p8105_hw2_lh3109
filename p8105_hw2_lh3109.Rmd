@@ -7,10 +7,59 @@ output: html_document
 
 ```{r, echo = FALSE, message=FALSE}
 library(tidyverse)
+library(readxl)
 library(dplyr)
 ```
 
 ## Problem 1
+```{r, message = FALSE}
+#import Mr. Trash Wheel sheet from the excel file
+mr_trash_wheel_df = 
+  read_excel(
+    "data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+    sheet = 1,
+    range = "A2:N534"
+  ) %>% 
+  #clean variable names
+  janitor::clean_names() %>% 
+  #omit rows that do not include dumpster-specific data
+  filter(!is.na(dumpster)) #%>% 
+  #as.numeric(unlist("sports_balls")) %>% 
+  #round the number of sports balls to the nearest integer
+  #round("sports_balls")
+
+#mr_trash_wheel_df
+
+#import precipitation 2019 data
+precip_2019_df = 
+  read_excel(
+    "data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+    sheet = 6,
+    range = "A2:B14"
+    ) %>% 
+  #clean variable names
+  janitor::clean_names() %>% 
+  #add year variable
+  mutate(year = "2019")
+
+
+#import precipitation 2018 data
+precip_2018_df = 
+  read_excel(
+    "data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+    sheet = 7,
+    range = "A2:B14"
+    ) %>% 
+  #clean variable names
+  janitor::clean_names() %>% 
+  #add year variable
+  mutate(year = "2018") 
+
+combined_data = left_join(precip_2019_df, precip_2018_df, by = "month")
+combined_data
+```
+
+
 
 
 
