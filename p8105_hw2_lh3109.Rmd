@@ -1,0 +1,76 @@
+---
+title: "p8105_hw2_lh3109"
+author: "Lesi He"
+output: html_document
+---
+
+
+```{r, echo = FALSE, message=FALSE}
+library(tidyverse)
+library(dplyr)
+```
+
+## Problem 1
+
+
+
+
+## Problem 2
+
+
+
+
+
+
+
+## Problem 3
+```{r}
+#read the csv file
+baby_names_df = 
+  read_csv("data/Popular_Baby_Names.csv", col_types = "icccii") %>% 
+  #create better variable names
+  janitor::clean_names() %>% 
+  #remove duplicated names
+  distinct() 
+
+olivia_df = 
+  #filter by the name "Olivia"
+  filter(baby_names_df, childs_first_name == "Olivia") %>%
+  #produce table for "Olivia" summarizing rank over years
+  pivot_wider(
+    ethnicity,
+    names_from = "year_of_birth",
+    values_from = "rank"
+  ) %>% 
+  knitr::kable()
+
+popular_male_df = 
+  #filter by gender
+  filter(baby_names_df, gender == "MALE") %>% 
+  #group the names by year
+  group_by(year_of_birth) %>% 
+  #extract the rows with highest counts of a name
+  slice(which.max(count))
+
+
+nonhis_m_2016_df = 
+  #filter the dataframe by gender, year of birth and ethnicity
+  filter(baby_names_df, gender == "MALE", year_of_birth == 2016, grepl("NON HISPANIC", ethnicity)) %>% 
+  group_by(childs_first_name)
+
+#create scatter plot for nonhis_male_2016_df
+ggp_nonhis_m_2016 = 
+  nonhis_m_2016_df %>%
+    ggplot(aes(x = rank, y = count)) +
+    geom_point()
+  
+
+#olivia_df
+#popular_male_df
+#nonhis_male_2016_df
+#ggp_nonhis_m_2016
+```
+
+
+
+
