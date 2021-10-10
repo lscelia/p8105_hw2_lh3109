@@ -183,11 +183,32 @@ mr_trash_wheel_df =
   janitor::clean_names() %&gt;% 
   #omit rows that do not include dumpster-specific data
   filter(!is.na(dumpster)) #%&gt;% 
-  #as.numeric(unlist(&quot;sports_balls&quot;)) %&gt;% 
-  #round the number of sports balls to the nearest integer
-  #round(&quot;sports_balls&quot;)
+  #change the variable type to integer
+  #mutate(sports_balls = as.numeric(as.character(sports_balls))) %&gt;% 
+  #round the sports_balls values
+  #mutate(sport_balls = round(&quot;sports_balls&quot;))
 
-#mr_trash_wheel_df
+#get median of the number of sports_balls
+#sports_balls_median = median(mr_trash_wheel_df[,&quot;sports_balls&quot;])
+mr_trash_wheel_df</code></pre>
+<pre><code>## # A tibble: 453 × 14
+##    dumpster month  year date                weight_tons volume_cubic_yards
+##       &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dttm&gt;                    &lt;dbl&gt;              &lt;dbl&gt;
+##  1        1 May    2014 2014-05-16 00:00:00        4.31                 18
+##  2        2 May    2014 2014-05-16 00:00:00        2.74                 13
+##  3        3 May    2014 2014-05-16 00:00:00        3.45                 15
+##  4        4 May    2014 2014-05-17 00:00:00        3.1                  15
+##  5        5 May    2014 2014-05-17 00:00:00        4.06                 18
+##  6        6 May    2014 2014-05-20 00:00:00        2.71                 13
+##  7        7 May    2014 2014-05-21 00:00:00        1.91                  8
+##  8        8 May    2014 2014-05-28 00:00:00        3.7                  16
+##  9        9 June   2014 2014-06-05 00:00:00        2.52                 14
+## 10       10 June   2014 2014-06-11 00:00:00        3.76                 18
+## # … with 443 more rows, and 8 more variables: plastic_bottles &lt;dbl&gt;,
+## #   polystyrene &lt;dbl&gt;, cigarette_butts &lt;dbl&gt;, glass_bottles &lt;dbl&gt;,
+## #   grocery_bags &lt;dbl&gt;, chip_bags &lt;dbl&gt;, sports_balls &lt;dbl&gt;,
+## #   homes_powered &lt;dbl&gt;</code></pre>
+<pre class="r"><code>#sports_balls_median
 
 #import precipitation 2019 data
 precip_2019_df = 
@@ -199,7 +220,7 @@ precip_2019_df =
   #clean variable names
   janitor::clean_names() %&gt;% 
   #add year variable
-  mutate(year = &quot;2019&quot;)
+  mutate(year = &quot;2019&quot;, month = month.name[month])
 
 
 #import precipitation 2018 data
@@ -212,25 +233,27 @@ precip_2018_df =
   #clean variable names
   janitor::clean_names() %&gt;% 
   #add year variable
-  mutate(year = &quot;2018&quot;) 
+  mutate(year = &quot;2018&quot;, month = month.name[month]) 
 
-combined_data = left_join(precip_2019_df, precip_2018_df, by = &quot;month&quot;)
-combined_data</code></pre>
+left_join(precip_2019_df, precip_2018_df, by = &quot;month&quot;)</code></pre>
 <pre><code>## # A tibble: 12 × 5
-##    month total.x year.x total.y year.y
-##    &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt; 
-##  1     1    3.1  2019      0.94 2018  
-##  2     2    3.64 2019      4.8  2018  
-##  3     3    4.47 2019      2.69 2018  
-##  4     4    1.46 2019      4.69 2018  
-##  5     5    3.58 2019      9.27 2018  
-##  6     6    0.42 2019      4.77 2018  
-##  7     7    3.85 2019     10.2  2018  
-##  8     8    2.39 2019      6.45 2018  
-##  9     9    0.16 2019     10.5  2018  
-## 10    10    5.45 2019      2.12 2018  
-## 11    11    1.86 2019      7.82 2018  
-## 12    12    3.57 2019      6.11 2018</code></pre>
+##    month     total.x year.x total.y year.y
+##    &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt; 
+##  1 January      3.1  2019      0.94 2018  
+##  2 February     3.64 2019      4.8  2018  
+##  3 March        4.47 2019      2.69 2018  
+##  4 April        1.46 2019      4.69 2018  
+##  5 May          3.58 2019      9.27 2018  
+##  6 June         0.42 2019      4.77 2018  
+##  7 July         3.85 2019     10.2  2018  
+##  8 August       2.39 2019      6.45 2018  
+##  9 September    0.16 2019     10.5  2018  
+## 10 October      5.45 2019      2.12 2018  
+## 11 November     1.86 2019      7.82 2018  
+## 12 December     3.57 2019      6.11 2018</code></pre>
+<p>The</p>
+<p>The combined data set for 2018 and 2019 precipitation suggest that amount of precipitation varies a lot by each month. For instance, when there was higher amount of precipitation in January 2019, there was little precipitation in January 2018, and vice versa.</p>
+<p>The total precipitation in 2018 is 70.33 inch. The median number of sports ball in s dumpster in 2019 is ***.</p>
 </div>
 <div id="problem-2" class="section level2">
 <h2>Problem 2</h2>

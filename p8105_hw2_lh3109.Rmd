@@ -9,6 +9,7 @@ output: html_document
 library(tidyverse)
 library(readxl)
 library(dplyr)
+
 ```
 
 ## Problem 1
@@ -24,11 +25,15 @@ mr_trash_wheel_df =
   janitor::clean_names() %>% 
   #omit rows that do not include dumpster-specific data
   filter(!is.na(dumpster)) #%>% 
-  #as.numeric(unlist("sports_balls")) %>% 
-  #round the number of sports balls to the nearest integer
-  #round("sports_balls")
+  #change the variable type to integer
+  #mutate(sports_balls = as.numeric(as.character(sports_balls))) %>% 
+  #round the sports_balls values
+  #mutate(sport_balls = round("sports_balls"))
 
-#mr_trash_wheel_df
+#get median of the number of sports_balls
+#sports_balls_median = median(mr_trash_wheel_df[,"sports_balls"])
+mr_trash_wheel_df
+#sports_balls_median
 
 #import precipitation 2019 data
 precip_2019_df = 
@@ -40,7 +45,7 @@ precip_2019_df =
   #clean variable names
   janitor::clean_names() %>% 
   #add year variable
-  mutate(year = "2019")
+  mutate(year = "2019", month = month.name[month])
 
 
 #import precipitation 2018 data
@@ -53,20 +58,24 @@ precip_2018_df =
   #clean variable names
   janitor::clean_names() %>% 
   #add year variable
-  mutate(year = "2018") 
+  mutate(year = "2018", month = month.name[month]) 
 
-combined_data = left_join(precip_2019_df, precip_2018_df, by = "month")
-combined_data
+left_join(precip_2019_df, precip_2018_df, by = "month")
 ```
 
 
+The
 
+The combined data set for 2018 and 2019 precipitation suggest that amount of precipitation varies a lot by each month. For instance, when there was higher amount of precipitation in January 2019, there was little precipitation in January 2018, and vice versa.
 
+The total precipitation in 2018 is 70.33 inch. The median number of sports ball in s dumpster in 2019 is ***.
 
 
 ## Problem 2
 
+```{r}
 
+```
 
 
 
