@@ -24,16 +24,15 @@ mr_trash_wheel_df =
   #clean variable names
   janitor::clean_names() %>% 
   #omit rows that do not include dumpster-specific data
-  filter(!is.na(dumpster)) #%>% 
-  #change the variable type to integer
-  #mutate(sports_balls = as.numeric(as.character(sports_balls))) %>% 
+  filter(!is.na(dumpster)) %>% 
   #round the sports_balls values
-  #mutate(sport_balls = round("sports_balls"))
+  mutate(sports_balls = round(sports_balls)) 
+
 
 #get median of the number of sports_balls
-#sports_balls_median = median(mr_trash_wheel_df[,"sports_balls"])
+sports_balls_median = median(pull(mr_trash_wheel_df, "sports_balls"))
+sports_balls_median
 mr_trash_wheel_df
-#sports_balls_median
 
 #import precipitation 2019 data
 precip_2019_df = 
@@ -45,7 +44,9 @@ precip_2019_df =
   #clean variable names
   janitor::clean_names() %>% 
   #add year variable
-  mutate(year = "2019", month = month.name[month])
+  mutate(year = "2019", 
+         month = month.name[month]
+         )
 
 
 #import precipitation 2018 data
@@ -58,23 +59,32 @@ precip_2018_df =
   #clean variable names
   janitor::clean_names() %>% 
   #add year variable
-  mutate(year = "2018", month = month.name[month]) 
+  mutate(year = "2018", 
+         month = month.name[month]
+         ) 
 
 left_join(precip_2019_df, precip_2018_df, by = "month")
 ```
 
 
-The
+The Mr. Trash Wheel's data suggest that the number of sports_balls are generally increasing. The combined data set for 2018 and 2019 precipitation suggest that amount of precipitation varies a lot by each month. For instance, when there was higher amount of precipitation in January 2019, there was little precipitation in January 2018, and vice versa.
 
-The combined data set for 2018 and 2019 precipitation suggest that amount of precipitation varies a lot by each month. For instance, when there was higher amount of precipitation in January 2019, there was little precipitation in January 2018, and vice versa.
-
-The total precipitation in 2018 is 70.33 inch. The median number of sports ball in s dumpster in 2019 is ***.
+The total precipitation in 2018 is 70.33 inch. The median number of sports ball in s dumpster in 2019 is 9.
 
 
 ## Problem 2
 
 ```{r}
-
+#read pols_month data
+pols_month_df = 
+  read_csv("data/pols-month.csv") %>% 
+  #create better variable names
+  janitor::clean_names() %>% 
+  separate(mon, into = c("year", "month", "day")) %>% 
+  mutate(month = month.name[as.numeric(month)],
+         president = prez_gop + prez_dem,
+         )
+pols_month_df
 ```
 
 

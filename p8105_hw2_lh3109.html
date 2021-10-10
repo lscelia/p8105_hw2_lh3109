@@ -182,15 +182,16 @@ mr_trash_wheel_df =
   #clean variable names
   janitor::clean_names() %&gt;% 
   #omit rows that do not include dumpster-specific data
-  filter(!is.na(dumpster)) #%&gt;% 
-  #change the variable type to integer
-  #mutate(sports_balls = as.numeric(as.character(sports_balls))) %&gt;% 
+  filter(!is.na(dumpster)) %&gt;% 
   #round the sports_balls values
-  #mutate(sport_balls = round(&quot;sports_balls&quot;))
+  mutate(sports_balls = round(sports_balls)) 
+
 
 #get median of the number of sports_balls
-#sports_balls_median = median(mr_trash_wheel_df[,&quot;sports_balls&quot;])
-mr_trash_wheel_df</code></pre>
+sports_balls_median = median(pull(mr_trash_wheel_df, &quot;sports_balls&quot;))
+sports_balls_median</code></pre>
+<pre><code>## [1] 9</code></pre>
+<pre class="r"><code>mr_trash_wheel_df</code></pre>
 <pre><code>## # A tibble: 453 × 14
 ##    dumpster month  year date                weight_tons volume_cubic_yards
 ##       &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dttm&gt;                    &lt;dbl&gt;              &lt;dbl&gt;
@@ -208,9 +209,7 @@ mr_trash_wheel_df</code></pre>
 ## #   polystyrene &lt;dbl&gt;, cigarette_butts &lt;dbl&gt;, glass_bottles &lt;dbl&gt;,
 ## #   grocery_bags &lt;dbl&gt;, chip_bags &lt;dbl&gt;, sports_balls &lt;dbl&gt;,
 ## #   homes_powered &lt;dbl&gt;</code></pre>
-<pre class="r"><code>#sports_balls_median
-
-#import precipitation 2019 data
+<pre class="r"><code>#import precipitation 2019 data
 precip_2019_df = 
   read_excel(
     &quot;data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx&quot;, 
@@ -220,7 +219,9 @@ precip_2019_df =
   #clean variable names
   janitor::clean_names() %&gt;% 
   #add year variable
-  mutate(year = &quot;2019&quot;, month = month.name[month])
+  mutate(year = &quot;2019&quot;, 
+         month = month.name[month]
+         )
 
 
 #import precipitation 2018 data
@@ -233,7 +234,9 @@ precip_2018_df =
   #clean variable names
   janitor::clean_names() %&gt;% 
   #add year variable
-  mutate(year = &quot;2018&quot;, month = month.name[month]) 
+  mutate(year = &quot;2018&quot;, 
+         month = month.name[month]
+         ) 
 
 left_join(precip_2019_df, precip_2018_df, by = &quot;month&quot;)</code></pre>
 <pre><code>## # A tibble: 12 × 5
@@ -251,12 +254,43 @@ left_join(precip_2019_df, precip_2018_df, by = &quot;month&quot;)</code></pre>
 ## 10 October      5.45 2019      2.12 2018  
 ## 11 November     1.86 2019      7.82 2018  
 ## 12 December     3.57 2019      6.11 2018</code></pre>
-<p>The</p>
-<p>The combined data set for 2018 and 2019 precipitation suggest that amount of precipitation varies a lot by each month. For instance, when there was higher amount of precipitation in January 2019, there was little precipitation in January 2018, and vice versa.</p>
-<p>The total precipitation in 2018 is 70.33 inch. The median number of sports ball in s dumpster in 2019 is ***.</p>
+<p>The Mr. Trash Wheel’s data suggest that the number of sports_balls are generally increasing. The combined data set for 2018 and 2019 precipitation suggest that amount of precipitation varies a lot by each month. For instance, when there was higher amount of precipitation in January 2019, there was little precipitation in January 2018, and vice versa.</p>
+<p>The total precipitation in 2018 is 70.33 inch. The median number of sports ball in s dumpster in 2019 is 9.</p>
 </div>
 <div id="problem-2" class="section level2">
 <h2>Problem 2</h2>
+<pre class="r"><code>#read pols_month data
+pols_month_df = 
+  read_csv(&quot;data/pols-month.csv&quot;) %&gt;% 
+  #create better variable names
+  janitor::clean_names() %&gt;% 
+  separate(mon, into = c(&quot;year&quot;, &quot;month&quot;, &quot;day&quot;)) %&gt;% 
+  mutate(month = month.name[as.numeric(month)],
+         president = prez_gop + prez_dem,
+         )</code></pre>
+<pre><code>## Rows: 822 Columns: 9</code></pre>
+<pre><code>## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl  (8): prez_gop, gov_gop, sen_gop, rep_gop, prez_dem, gov_dem, sen_dem, r...
+## date (1): mon</code></pre>
+<pre><code>## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>pols_month_df</code></pre>
+<pre><code>## # A tibble: 822 × 12
+##    year  month     day   prez_gop gov_gop sen_gop rep_gop prez_dem gov_dem sen_dem
+##    &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1 1947  January   15           0      23      51     253        1      23      45
+##  2 1947  February  15           0      23      51     253        1      23      45
+##  3 1947  March     15           0      23      51     253        1      23      45
+##  4 1947  April     15           0      23      51     253        1      23      45
+##  5 1947  May       15           0      23      51     253        1      23      45
+##  6 1947  June      15           0      23      51     253        1      23      45
+##  7 1947  July      15           0      23      51     253        1      23      45
+##  8 1947  August    15           0      23      51     253        1      23      45
+##  9 1947  September 15           0      23      51     253        1      23      45
+## 10 1947  October   15           0      23      51     253        1      23      45
+## # … with 812 more rows, and 2 more variables: rep_dem &lt;dbl&gt;, president &lt;dbl&gt;</code></pre>
 </div>
 <div id="problem-3" class="section level2">
 <h2>Problem 3</h2>
