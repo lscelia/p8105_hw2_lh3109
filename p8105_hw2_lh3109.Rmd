@@ -67,9 +67,7 @@ left_join(precip_2019_df, precip_2018_df, by = "month")
 ```
 
 
-The Mr. Trash Wheel's data suggest that the number of sports_balls are generally increasing. The combined data set for 2018 and 2019 precipitation suggest that amount of precipitation varies a lot by each month. For instance, when there was higher amount of precipitation in January 2019, there was little precipitation in January 2018, and vice versa.
-
-The total precipitation in 2018 is 70.33 inch. The median number of sports ball in s dumpster in 2019 is 9.
+The Mr. Trash Wheel's data suggests that the number of sports_balls are generally increasing. The combined data set for 2018 and 2019 precipitation suggest that amount of precipitation varies a lot by each month. For instance, when there was higher amount of precipitation in January 2019, there was little precipitation in January 2018, and vice versa. The total precipitation in 2018 is 70.33 inch. The median number of sports ball in s dumpster in 2019 is 9.
 
 
 ## Problem 2
@@ -92,7 +90,7 @@ pols_month_df =
          -prez_dem
          )
 
-pols_month_df
+#pols_month_df
 
 
 #import snp data
@@ -100,8 +98,10 @@ snp_df =
   read_csv("data/snp.csv") %>% 
   #create better variable names
   janitor::clean_names() %>% 
+  #convert the date variable to proper format
+  mutate(date = as.Date(as.character(date), format = "%d/%m/%y")) %>% 
   #separate date into three variables
-  separate(date, into = c("month", "day", "year")) %>% 
+  separate(date, into = c("year", "day", "month")) %>% 
   #change the month variable
   mutate(month = month.name[as.numeric(month)]) %>% 
   #remove day variable
@@ -109,27 +109,34 @@ snp_df =
   #make year variable become the heading variable
   relocate("year")
 
-snp_df
+#There was a error in the function as.Date() where year 1950-1968 was converted to 2050-2068
+#I was unable to find a better way to replace as.Date() to a better function
+#To fix this problem:
+snp_df <- mutate(snp_df, year = ifelse(as.numeric(year) >= 2050, as.numeric(year) - 100, year))
+
+#snp_df
+
 
 #import unemployment data
 unemployment_df = 
-  read_csv("data/unemployment.csv") %>% 
-  #create better variable names
-  #janitor::clean_names() %>% 
+  read_csv("data/unemployment.csv",
+           col_names = c("year", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12")) %>% 
+  .[-1,] %>% 
   pivot_longer(
-    Jan:Dec,
+    "1":"12",
     names_to = "month",
-    values_to = "precentage"
-  ) 
-  #mutate(month = 1:12)
+    values_to = "precentage") %>% 
+  mutate(month = month.name[as.numeric(month)])
+  
 
-unemployment_df
+#unemployment_df
 
-#join_colsmonth_snp = left_join(pols_month_df, snp_df, by = c("year", "month"))
-#join_colsmonth_snp 
+join_colsmonth_snp = left_join(pols_month_df, snp_df, by = c("month","year"))
+join_colsmonth_snp_unemply = left_join(join_colsmonth_snp, unemployment_df, by = c("month","year"))
+join_colsmonth_snp_unemply 
 ```
 
-
+The 
 
 
 
@@ -175,10 +182,10 @@ ggp_nonhis_m_2016 =
     geom_point()
   
 
-#olivia_df
-#popular_male_df
-#nonhis_male_2016_df
-#ggp_nonhis_m_2016
+olivia_df
+popular_male_df
+nonhis_m_2016_df
+ggp_nonhis_m_2016
 ```
 
 
