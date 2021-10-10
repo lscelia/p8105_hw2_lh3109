@@ -75,16 +75,58 @@ The total precipitation in 2018 is 70.33 inch. The median number of sports ball 
 ## Problem 2
 
 ```{r}
-#read pols_month data
+#import pols_month data
 pols_month_df = 
   read_csv("data/pols-month.csv") %>% 
   #create better variable names
   janitor::clean_names() %>% 
+  #separate month into three variables
   separate(mon, into = c("year", "month", "day")) %>% 
+  #manipulate columns:
   mutate(month = month.name[as.numeric(month)],
          president = prez_gop + prez_dem,
+         ) %>% 
+  #remove columns:
+  select(-day,
+         -prez_gop,
+         -prez_dem
          )
+
 pols_month_df
+
+
+#import snp data
+snp_df = 
+  read_csv("data/snp.csv") %>% 
+  #create better variable names
+  janitor::clean_names() %>% 
+  #separate date into three variables
+  separate(date, into = c("month", "day", "year")) %>% 
+  #change the month variable
+  mutate(month = month.name[as.numeric(month)]) %>% 
+  #remove day variable
+  select(-day) %>% 
+  #make year variable become the heading variable
+  relocate("year")
+
+snp_df
+
+#import unemployment data
+unemployment_df = 
+  read_csv("data/unemployment.csv") %>% 
+  #create better variable names
+  #janitor::clean_names() %>% 
+  pivot_longer(
+    Jan:Dec,
+    names_to = "month",
+    values_to = "precentage"
+  ) 
+  #mutate(month = 1:12)
+
+unemployment_df
+
+#join_colsmonth_snp = left_join(pols_month_df, snp_df, by = c("year", "month"))
+#join_colsmonth_snp 
 ```
 
 
