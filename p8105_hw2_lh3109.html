@@ -352,7 +352,10 @@ join_colsmonth_snp_unemply </code></pre>
 ##  9 1947  Septem…      23      51     253      23      45     198         1    NA
 ## 10 1947  October      23      51     253      23      45     198         1    NA
 ## # … with 812 more rows, and 1 more variable: precentage &lt;chr&gt;</code></pre>
-<p>The</p>
+<pre class="r"><code>#join_colsmonth_snp_unemply  %&gt;%
+    #ggplot(aes(x = year, y = rep_dem)) +
+    #geom_point()</code></pre>
+<p>The pols-month data set contains observations related to the president, governors, senators and representative related to the number of national politicians who are democratic or republican at any given time. The snp data set contains observations of related to the closing values of the Standard &amp; Poor’s stock market index associated with date. The unemployment data set contains the percentage of unemployment with respect to month and date. The final “join_colsmonth_snp_unemply” data set combines these three data set by matching them with specific month and year. Based on this data set, we can see that the unemployment percentage, though fluctuate, is slightly increasing over years form 1950 to 2050. The value of close is experiencing exponential growth in these years. The number of democratic governors first increased by years, reached maximum at around 1997, then gradually decreased. Similarly, the number of democratic senators and democratic representatives follows the similar pattern over these years.</p>
 </div>
 <div id="problem-3" class="section level2">
 <h2>Problem 3</h2>
